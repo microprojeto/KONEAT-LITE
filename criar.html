@@ -1,28 +1,75 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Koneat - Criar</title><link rel="stylesheet" href="css/style.css">
-<style>body.dark-create-theme{background:#000;color:#fff;margin:0;font-family:sans-serif;height:100vh;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden} .create-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:#000;border-bottom:1px solid rgba(255,255,255,0.08)} .type-tab{background:none;border:none;color:#8e8e93;font-size:14px;font-weight:700;cursor:pointer;text-transform:uppercase} .type-tab.active{color:#fff;border-bottom:2px solid #fff} .btn-advance-top{background:transparent;color:#8e8e93;border:none;font-size:15px;font-weight:700;cursor:not-allowed} .btn-advance-top.active{color:#00ff88;cursor:pointer} .create-preview-area{flex:1;display:flex;align-items:center;justify-content:center;color:#8e8e93;cursor:pointer;position:relative;overflow:hidden;background:#000} .caption-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.95);z-index:100;display:none;flex-direction:column;padding:20px} .caption-modal.show{display:flex} .loading-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:200;display:none;align-items:center;justify-content:center} .loading-overlay.show{display:flex} .spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,0.2);border-top-color:#00ff88;border-radius:50%;animation:spin 0.8s linear infinite} @keyframes spin{to{transform:rotate(360deg)}}</style>
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Koneat - Criar Publicação</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body.dark-create-theme{background:#000;color:#fff;margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;overflow:hidden;height:100vh;display:flex;flex-direction:column;justify-content:space-between}
+        .create-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;z-index:20;background:#000;border-bottom:1px solid rgba(255,255,255,0.08)}
+        .btn-close{background:none;border:none;color:#fff;cursor:pointer;padding:4px;display:flex;align-items:center}
+        .type-selector-tabs{display:flex;gap:16px}
+        .type-tab{background:none;border:none;color:#8e8e93;font-size:14px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:0.5px;padding:4px 0;transition:color 0.2s}
+        .type-tab.active{color:#fff;border-bottom:2px solid #fff}
+        .btn-advance-top{background:transparent;color:#8e8e93;border:none;font-size:15px;font-weight:700;cursor:not-allowed;padding:6px 12px;border-radius:8px;transition:0.2s}
+        .btn-advance-top.active{color:#00ff88;cursor:pointer}
+        .gallery-controls-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;z-index:10}
+        .btn-gallery-dropdown{background:none;border:none;color:#fff;font-size:16px;font-weight:700;display:flex;align-items:center;gap:6px;cursor:pointer}
+        .right-controls{display:flex;align-items:center;gap:12px}
+        .icon-circle-btn{width:36px;height:36px;border-radius:50%;background:#262626;border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
+        .create-preview-area{flex:1;display:flex;align-items:center;justify-content:center;color:#8e8e93;font-size:16px;font-weight:600;cursor:pointer;position:relative;overflow:hidden;background:#000}
+        .create-preview-area video,.create-preview-area img{width:100%;height:100%;object-fit:contain}
+        .caption-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.95);z-index:100;display:none;flex-direction:column;padding:20px;box-sizing:border-box}
+        .caption-modal.show{display:flex}
+        .caption-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+        .caption-header h2{font-size:18px;margin:0;font-weight:700}
+        .btn-back-caption,.btn-publish-final{background:none;border:none;color:#fff;font-size:15px;font-weight:700;cursor:pointer}
+        .btn-publish-final{color:#00ff88}
+        .caption-body{display:flex;gap:16px;align-items:flex-start}
+        .caption-thumbnail{width:84px;height:84px;border-radius:12px;object-fit:cover;background:#222}
+        .caption-textarea{flex:1;height:120px;background:transparent;border:none;color:#fff;font-size:15px;resize:none;outline:none;font-family:inherit}
+        .loading-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:200;display:none;align-items:center;justify-content:center}
+        .loading-overlay.show{display:flex}
+        .loading-box{background:#18181b;border:1px solid rgba(255,255,255,0.1);padding:24px 28px;border-radius:20px;display:flex;flex-direction:column;align-items:center;gap:16px;box-shadow:0 8px 32px rgba(0,0,0,0.6);text-align:center}
+        .spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,0.2);border-top-color:#00ff88;border-radius:50%;animation:spin 0.8s linear infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}
+    </style>
 </head>
 <body class="dark-create-theme">
-<header class="create-header"><a href="./passo1.html" style="color:#fff">X</a><div><button class="type-tab active" data-type="post">POST</button> <button class="type-tab" data-type="virais">VIRAIS</button></div><button class="btn-advance-top" id="btnAdvance">Avançar</button></header>
-<main class="create-preview-area" id="previewContainer"><span>Toque para escolher - 9:16, 16:9, 4:5</span></main>
-<div class="caption-modal" id="captionModal"><div style="display:flex;justify-content:space-between"><button id="closeModalBtn" style="background:none;border:none;color:#fff">Voltar</button><button id="publishFinalBtn" style="background:none;border:none;color:#00ff88;font-weight:700">Compartilhar</button></div><div style="display:flex;gap:16px;margin-top:20px"><img id="modalThumbnail" style="width:84px;height:84px;border-radius:12px;background:#222;object-fit:cover"><textarea id="postCaptionInput" placeholder="Legenda..." style="flex:1;background:transparent;border:none;color:#fff;outline:none"></textarea></div></div>
-<div class="loading-overlay" id="loadingOverlay"><div style="background:#18181b;padding:24px;border-radius:20px;display:flex;flex-direction:column;align-items:center;gap:16px"><div class="spinner"></div><span>Postando...</span></div></div>
-<input type="file" id="fileInput" accept="image/*,video/*" style="display:none">
-<script>
-let fileReal=null, formatoDetectado='9:16';
-const fileInput=document.getElementById('fileInput'), previewContainer=document.getElementById('previewContainer'), btnAdvance=document.getElementById('btnAdvance'), captionModal=document.getElementById('captionModal'), loadingOverlay=document.getElementById('loadingOverlay');
-function detectarFormato(file, cb){ if(file.type.startsWith('image/')){ cb('1:1'); return; } const url=URL.createObjectURL(file); const v=document.createElement('video'); v.preload='metadata'; v.onloadedmetadata=()=>{ URL.revokeObjectURL(url); const r=v.videoWidth/v.videoHeight; if(r<0.8) cb('9:16'); else if(r>1.25) cb('16:9'); else if(r>=0.8&&r<1) cb('4:5'); else cb('1:1'); }; v.onerror=()=>cb('9:16'); v.src=url; }
-previewContainer.addEventListener('click',()=>fileInput.click());
-fileInput.addEventListener('change',(e)=>{ const file=e.target.files[0]; if(!file) return; if(file.size>100*1024*1024){ alert('Max 100MB'); return; } fileReal=file; detectarFormato(file,(f)=>{ formatoDetectado=f; const url=URL.createObjectURL(file); previewContainer.innerHTML=file.type.startsWith('video')?`<video src="${url}" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:contain"></video><div style="position:absolute;bottom:20px;left:20px;background:rgba(0,0,0,0.7);color:#00ff88;padding:6px 10px;border-radius:8px;font-size:12px">${f}</div>`:`<img src="${url}" style="width:100%;height:100%;object-fit:contain">`; document.getElementById('modalThumbnail').src=url; btnAdvance.classList.add('active'); }); });
-btnAdvance.addEventListener('click',()=>{ if(!fileReal) return alert('Escolha um vídeo'); captionModal.classList.add('show'); });
-document.getElementById('closeModalBtn').addEventListener('click',()=>captionModal.classList.remove('show'));
-document.querySelectorAll('.type-tab').forEach(tab=>tab.addEventListener('click',()=>{ document.querySelectorAll('.type-tab').forEach(t=>t.classList.remove('active')); tab.classList.add('active'); }));
-document.getElementById('publishFinalBtn').addEventListener('click',()=>{
-  if(!fileReal) return; loadingOverlay.classList.add('show');
-  const req=indexedDB.open('KoneatDB',1); req.onupgradeneeded=(e)=>{ if(!e.target.result.objectStoreNames.contains('videos')) e.target.result.createObjectStore('videos',{keyPath:'id'}); };
-  req.onsuccess=(e)=>{ const db=e.target.result; const tx=db.transaction('videos','readwrite'); const store=tx.objectStore('videos'); const id='post_'+Date.now(); const tipoAtivo=document.querySelector('.type-tab.active')?.dataset.type||'post'; store.add({id, file:fileReal, formato:formatoDetectado, tipo:tipoAtivo==='virais'?'viral':'geral', caption:document.getElementById('postCaptionInput').value, created:Date.now()}); tx.oncomplete=()=>{ if(tipoAtivo==='virais') window.location.href='./passo2.html'; else window.location.href='./passo1.html'; }; };
-});
-</script>
+    <header class="create-header">
+        <a href="./passo1.html" class="btn-close"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></a>
+        <div class="type-selector-tabs">
+            <button type="button" class="type-tab active" data-type="post">POST</button>
+            <button type="button" class="type-tab" data-type="virais">VIRAIS</button>
+        </div>
+        <button type="button" class="btn-advance-top" id="btnAdvance">Avançar</button>
+    </header>
+    <div class="gallery-controls-bar">
+        <button type="button" class="btn-gallery-dropdown">Galeria</button>
+        <div class="right-controls"><button type="button" class="icon-circle-btn">▭</button><button type="button" class="icon-circle-btn" id="openCameraBtn">◎</button></div>
+    </div>
+    <main class="create-preview-area" id="previewContainer"><span id="previewText">Toque para escolher - 9:16, 16:9, 4:5, 1:1</span></main>
+    <div class="caption-modal" id="captionModal">
+        <div class="caption-header"><button type="button" class="btn-back-caption" id="closeModalBtn">Voltar</button><h2>Nova publicação</h2><button type="button" class="btn-publish-final" id="publishFinalBtn">Compartilhar</button></div>
+        <div class="caption-body"><img id="modalThumbnail" class="caption-thumbnail"><textarea id="postCaptionInput" class="caption-textarea" placeholder="Escreva uma legenda..."></textarea></div>
+    </div>
+    <div class="loading-overlay" id="loadingOverlay"><div class="loading-box"><div class="spinner"></div><span class="loading-text">Postando...</span></div></div>
+    <input type="file" id="fileInput" accept="image/*,video/*" style="display:none">
+    <script>
+        let fileReal=null, formatoDetectado='9:16';
+        const fileInput=document.getElementById('fileInput'), previewContainer=document.getElementById('previewContainer'), btnAdvance=document.getElementById('btnAdvance'), captionModal=document.getElementById('captionModal'), loadingOverlay=document.getElementById('loadingOverlay');
+        function detectarFormato(file, cb){ if(file.type.startsWith('image/')){ cb('1:1'); return; } const url=URL.createObjectURL(file); const v=document.createElement('video'); v.preload='metadata'; v.onloadedmetadata=()=>{ URL.revokeObjectURL(url); const r=v.videoWidth/v.videoHeight; if(r<0.8) cb('9:16'); else if(r>1.25) cb('16:9'); else if(r>=0.8&&r<1) cb('4:5'); else cb('1:1'); }; v.onerror=()=>cb('9:16'); v.src=url; }
+        previewContainer.addEventListener('click',()=>fileInput.click());
+        document.getElementById('openCameraBtn')?.addEventListener('click',()=>fileInput.click());
+        fileInput.addEventListener('change',(e)=>{ const file=e.target.files[0]; if(!file) return; if(file.size>120*1024*1024){ alert('Vídeo muito grande (max 120MB)'); return; } fileReal=file; detectarFormato(file,(f)=>{ formatoDetectado=f; const url=URL.createObjectURL(file); previewContainer.innerHTML=file.type.startsWith('video')?`<video src="${url}" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:contain"></video><div style="position:absolute;bottom:20px;left:20px;background:rgba(0,0,0,0.7);color:#00ff88;padding:6px 10px;border-radius:8px;font-size:12px">${f}</div>`:`<img src="${url}" style="width:100%;height:100%;object-fit:contain">`; document.getElementById('modalThumbnail').src=url; btnAdvance.classList.add('active'); }); });
+        btnAdvance.addEventListener('click',()=>{ if(!fileReal) return alert('Escolha um vídeo'); captionModal.classList.add('show'); });
+        document.getElementById('closeModalBtn').addEventListener('click',()=>captionModal.classList.remove('show'));
+        document.querySelectorAll('.type-tab').forEach(tab=>tab.addEventListener('click',()=>{ document.querySelectorAll('.type-tab').forEach(t=>t.classList.remove('active')); tab.classList.add('active'); }));
+        document.getElementById('publishFinalBtn').addEventListener('click',()=>{
+          if(!fileReal) return; loadingOverlay.classList.add('show');
+          const req=indexedDB.open('KoneatDB',1); req.onupgradeneeded=(e)=>{ if(!e.target.result.objectStoreNames.contains('videos')) e.target.result.createObjectStore('videos',{keyPath:'id'}); };
+          req.onsuccess=(e)=>{ const db=e.target.result; const tx=db.transaction('videos','readwrite'); const store=tx.objectStore('videos'); const id='post_'+Date.now(); const tipoAtivo=document.querySelector('.type-tab.active')?.dataset.type||'post'; store.add({id, file:fileReal, formato:formatoDetectado, tipo:tipoAtivo==='virais'?'viral':'geral', caption:document.getElementById('postCaptionInput').value, created:Date.now()}); tx.oncomplete=()=>{ if(tipoAtivo==='virais') window.location.href='./passo2.html'; else window.location.href='./passo1.html'; }; };
+        });
+    </script>
 </body>
-</html>
+      </html>
