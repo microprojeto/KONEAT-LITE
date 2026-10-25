@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -294,7 +295,18 @@
         }
         // Função para Renderizar Posts e Lixeira
         function renderUserPosts() {
-            const userPosts = JSON.parse(localStorage.getItem('koneat_user_posts') || '[]');
+            // Junta as fontes de posts (koneat_posts é a principal)
+            const allPosts = [
+                ...JSON.parse(localStorage.getItem('koneat_posts') || '[]'),
+                ...JSON.parse(localStorage.getItem('koneat_user_posts') || '[]')
+            ];
+            const seenIds = new Set();
+            const userPosts = allPosts.filter(p => {
+                const key = p.id || koneatMediaUrl(p);
+                if (seenIds.has(key)) return false;
+                seenIds.add(key);
+                return true;
+            });
             const postsGrid = document.getElementById('userPostsGrid');
             const emptyState = document.getElementById('emptyState');
             const postsCount = document.getElementById('postsCount');
@@ -324,7 +336,7 @@
                             </button>
 
                             ${isVideo && mediaUrl ?
-                                `<video src="${mediaUrl}" muted playsinline preload="metadata"></video>
+                                `<video src="${mediaUrl}" controls playsinline preload="metadata"></video>
                                  <div class="badge-video">
                                      <svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                                  </div>`
@@ -346,6 +358,11 @@
             userPosts = userPosts.filter(p => p.id !== postId);
             localStorage.setItem('koneat_user_posts', JSON.stringify(userPosts));
 
+            // Remove também da lista principal koneat_posts
+            let mainPosts = JSON.parse(localStorage.getItem('koneat_posts') || '[]');
+            mainPosts = mainPosts.filter(p => p.id !== postId);
+            localStorage.setItem('koneat_posts', JSON.stringify(mainPosts));
+
             // 2. Se for um vídeo viral, remove também do feed de vídeos
             let viraisFeed = JSON.parse(localStorage.getItem('koneat_virais_feed') || '[]');
             viraisFeed = viraisFeed.filter(v => v.id !== postId);
@@ -359,4 +376,5 @@
         renderUserPosts();
     </script>
 </body>
-    </html>
+                                                                                                                                                                                                          </html>
+                        
