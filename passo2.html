@@ -1,16 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Koneat - Vídeos Virais</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
         body.dark-video-theme{background:#000;color:#fff;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;overflow:hidden;width:100vw;height:100vh}
         .reels-feed-container{width:100vw;height:100vh;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none}
         .reels-feed-container::-webkit-scrollbar{display:none}
-        .video-header{position:fixed;top:0;left:0;right:0;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;z-index:50;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,0.08);transition:transform 0.25s ease,opacity 0.25s ease}
-        .video-header.hidden{transform:translateY(-100%);opacity:0;pointer-events:none}
+        .video-header{position:fixed;top:0;left:0;right:0;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;z-index:50;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,0.08)}
         .video-header-title{font-size:18px;font-weight:700;color:#fff;margin:0}
         .header-actions-right{display:flex;align-items:center;gap:16px}
         .icon-btn-top{background:none;border:none;cursor:pointer;color:#fff;padding:4px}
@@ -18,115 +16,42 @@
         .reel-card{width:100vw;height:100vh;scroll-snap-align:start;position:relative;background:#000;display:flex;align-items:center;justify-content:center}
         .reel-video-element{width:100%;height:100%;object-fit:cover;cursor:pointer}
         .reel-video-element[data-formato="16:9"]{object-fit:contain;background:#000}
-        .reel-video-element[data-formato="4:5"]{object-fit:contain}
-        .btn-toggle-sound{position:absolute;top:72px;right:16px;width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:30;backdrop-filter:blur(4px)}
-        .play-pause-indicator{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.8);width:64px;height:64px;background:rgba(0,0,0,0.6);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;opacity:0;pointer-events:none;transition:opacity 0.2s ease,transform 0.2s ease;z-index:25}
-        .play-pause-indicator.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
-        .video-progress-bar-container{position:absolute;bottom:62px;left:0;right:0;height:2.5px;background:rgba(255,255,255,0.2);z-index:20}
-        .video-progress-bar-fill{height:100%;width:0%;background:#d1d1d6;transition:width 0.1s linear}
-        .video-footer-info{position:absolute;bottom:80px;left:16px;display:flex;flex-direction:column;gap:8px;z-index:10}
-        .creator-row{display:flex;align-items:center;gap:10px}
-        .creator-avatar-circle{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;background:#111}
-        .creator-name{font-size:15px;font-weight:700;color:#fff}
-        .btn-follow{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.6);color:#fff;padding:4px 14px;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;backdrop-filter:blur(4px)}
-        .video-actions-sidebar{position:absolute;right:16px;bottom:85px;display:flex;flex-direction:column;align-items:center;gap:22px;z-index:10}
-        .action-item{background:none;border:none;cursor:pointer;color:#fff;padding:0;display:flex;flex-direction:column;align-items:center;gap:2px}
-        .action-item svg{width:26px;height:26px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5))}
-        .action-item.liked svg{fill:#e74c3c;stroke:#e74c3c}
-        .action-item.saved svg{fill:#fff;stroke:#fff}
-        .action-item.reposted svg{stroke:#00ff88}
-        .dropdown-menu-decisions{position:fixed;top:50px;right:16px;background:#fff;width:200px;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.5);display:none;flex-direction:column;padding:8px 0;z-index:100;color:#000}
-        .dropdown-menu-decisions.show{display:flex}
-        .decision-header{display:flex;align-items:center;gap:10px;padding:10px 16px;font-size:14px;font-weight:700;border-bottom:1px solid #f0f0f0}
-        .decision-item{display:flex;align-items:center;gap:10px;padding:10px 16px;font-size:13px;font-weight:600;color:#333;cursor:pointer}
-        .decision-footer{padding:8px 16px;font-size:11px;color:#8e8e93;border-top:1px solid #f0f0f0}
         .bottom-nav-fixed{position:fixed;bottom:0;left:0;right:0;width:100%;height:62px;background:#121214;border-top-left-radius:20px;border-top-right-radius:20px;display:flex;align-items:center;justify-content:space-around;z-index:999;box-sizing:border-box;padding:0 10px}
         .nav-link{background:none;border:none;cursor:pointer;color:#8e8e93;display:flex;align-items:center;justify-content:center;text-decoration:none;width:48px;height:48px}
-        .nav-link.active-video .video-box-filled{fill:#fff}
-        .nav-link.active-video .video-play-inner{fill:#121214}
+        .nav-link.active-video{color:#fff}
     </style>
 </head>
 <body class="dark-video-theme">
-    <header class="video-header" id="mainHeader">
-        <h1 class="video-header-title">Virais start</h1>
-        <div class="header-actions-right">
-            <button type="button" class="icon-btn-top"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button>
-            <button type="button" class="icon-btn-top" id="menuDecisionsBtn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
-        </div>
-    </header>
-    <div class="dropdown-menu-decisions" id="dropdownDecisions">
-        <div class="decision-header">Decisões</div>
-        <div class="decision-item">Não tenho interesse</div>
-        <div class="decision-item">Denunciar</div>
-        <div class="decision-item" style="color:#e74c3c;">Bloquear</div>
-        <div class="decision-footer">Koneat start · 1.1.4</div>
-    </div>
+    <header class="video-header" id="mainHeader"><h1 class="video-header-title">Virais</h1><div class="header-actions-right"><button class="icon-btn-top">⌕</button><button class="icon-btn-top" id="menuDecisionsBtn">☰</button></div></header>
     <main class="reels-feed-container" id="reelsContainer"></main>
     <nav class="bottom-nav-fixed">
-        <a href="./home.html" class="nav-link"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></a>
-        <a href="./criar.html" class="nav-link"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></a>
-        <a href="./passo2.html" class="nav-link active-video"><svg width="24" height="24" viewBox="0 0 24 24"><rect class="video-box-filled" x="2" y="2" width="20" height="20" rx="5" fill="#ffffff"></rect><polygon class="video-play-inner" points="10,8 16,12 10,16" fill="#121214"></polygon></svg></a>
-        <a href="./passo1.html" class="nav-link"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></a>
+        <a href="./home.html" class="nav-link">⌂</a><a href="./criar.html" class="nav-link">+</a><a href="./passo2.html" class="nav-link active-video">▶</a><a href="./passo1.html" class="nav-link">◉</a>
     </nav>
 <script>
 const reelsContainer=document.getElementById('reelsContainer');
-const mainHeader=document.getElementById('mainHeader');
-reelsContainer.addEventListener('scroll',()=>{if(reelsContainer.scrollTop>50)mainHeader.classList.add('hidden');else mainHeader.classList.remove('hidden');});
-const menuDecisionsBtn=document.getElementById('menuDecisionsBtn');
-const dropdownDecisions=document.getElementById('dropdownDecisions');
-menuDecisionsBtn?.addEventListener('click',(e)=>{e.stopPropagation();dropdownDecisions.classList.toggle('show');});
-document.addEventListener('click',()=>dropdownDecisions.classList.remove('show'));
-
-function getAllVideosUnified(){
-  const oldVirais=JSON.parse(localStorage.getItem('koneat_virais_feed')||'[]');
-  const newSystem=JSON.parse(localStorage.getItem('koneat_videos')||'[]');
-  const unified=[...newSystem];
-  oldVirais.forEach(v=>{ if(!unified.find(u=>u.id===v.id)) unified.push({...v,tipo:v.tipo||'viral',formato:v.formato||'9:16',src:v.url||v.src,username:v.author||'user'}); });
-  return unified;
-}
-
 function renderViraisFeed(){
-  const all=getAllVideosUnified();
-  const viraisFeed=all; // passo2 mostra TUDO
-  if(viraisFeed.length===0){
-    reelsContainer.innerHTML=`<div class="empty-feed-wrapper"><span>Os vídeos aparecerão aqui.</span><span style="font-size:13px;">Poste em Criar - aceita 9:16, 16:9, 4:5</span><a href="./criar.html" style="background:#fff;color:#000;padding:10px 18px;border-radius:20px;text-decoration:none;font-weight:700;margin-top:10px;">Criar primeiro vídeo</a></div>`;
-    return;
-  }
-  reelsContainer.innerHTML=viraisFeed.map((item)=>{
-    const isLiked=localStorage.getItem(`koneat_like_${item.id}`)==='true';
-    const isReposted=localStorage.getItem(`koneat_repost_${item.id}`)==='true';
-    const isSaved=localStorage.getItem(`koneat_save_${item.id}`)==='true';
-    const authorName=item.username||item.author||localStorage.getItem('koneat_username')||'Eributtler';
-    const formato=item.formato||'9:16';
-    return `<article class="reel-card" data-video-id="${item.id}" data-formato="${formato}">
-      <video class="reel-video-element" data-formato="${formato}" src="${item.src||item.url}" loop muted playsinline></video>
-      <div class="play-pause-indicator"><svg class="icon-play" width="28" height="28" viewBox="0 0 24 24" fill="#fff" style="display:none;"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg><svg class="icon-pause" width="28" height="28" viewBox="0 0 24 24" fill="#fff"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg></div>
-      <button type="button" class="btn-toggle-sound"><svg class="sound-off-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg><svg class="sound-on-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg></button>
-      <div class="video-progress-bar-container"><div class="video-progress-bar-fill"></div></div>
-      <div class="video-footer-info"><div class="creator-row"><div class="creator-avatar-circle"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div><span class="creator-name">@${authorName} • ${formato} ${item.tipo==='viral'?'🔥':''}</span><button type="button" class="btn-follow">Seguir</button></div></div>
-      <div class="video-actions-sidebar"><button type="button" class="action-item btn-like ${isLiked?'liked':''}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></button><button type="button" class="action-item btn-comment"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></button><button type="button" class="action-item btn-repost ${isReposted?'reposted':''}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 2l4 4-4 4"></path><path d="M3 11v-1a4 4 0 0 1 4-4h14"></path><path d="M7 22l-4-4 4-4"></path><path d="M21 13v1a4 4 0 0 1-4 4H3"></path></svg></button><button type="button" class="action-item btn-save ${isSaved?'saved':''}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg></button><button type="button" class="action-item btn-share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12v-1a7 7 0 0 1 7-7h9"></path><polyline points="16 8 20 4 16 0"></polyline></svg></button></div>
-    </article>`;
-  }).join('');
-
-  document.querySelectorAll('.reel-card').forEach(card=>{
-    const video=card.querySelector('.reel-video-element');
-    const progressFill=card.querySelector('.video-progress-bar-fill');
-    const soundBtn=card.querySelector('.btn-toggle-sound');
-    const soundOffIcon=card.querySelector('.sound-off-icon');
-    const soundOnIcon=card.querySelector('.sound-on-icon');
-    const playPauseIndicator=card.querySelector('.play-pause-indicator');
-    const iconPlay=card.querySelector('.icon-play');
-    const iconPause=card.querySelector('.icon-pause');
-    const observer=new IntersectionObserver((entries)=>{entries.forEach(entry=>{if(entry.isIntersecting){video.play().catch(()=>{});}else{video.pause();}});},{threshold:0.7});
-    observer.observe(card);
-    video?.addEventListener('timeupdate',()=>{if(video.duration){const percent=(video.currentTime/video.duration)*100;if(progressFill)progressFill.style.width=`${percent}%`;}});
-    soundBtn?.addEventListener('click',(e)=>{e.stopPropagation();video.muted=!video.muted;if(video.muted){soundOffIcon.style.display='block';soundOnIcon.style.display='none';}else{soundOffIcon.style.display='none';soundOnIcon.style.display='block';}});
-    video?.addEventListener('click',()=>{if(video.paused){video.play();iconPlay.style.display='none';iconPause.style.display='block';}else{video.pause();iconPlay.style.display='block';iconPause.style.display='none';}playPauseIndicator.classList.add('show');setTimeout(()=>playPauseIndicator.classList.remove('show'),600);});
-    const videoId=card.getAttribute('data-video-id');
-    card.querySelector('.btn-like')?.addEventListener('click',()=>{const isLiked=card.querySelector('.btn-like').classList.toggle('liked');localStorage.setItem(`koneat_like_${videoId}`,isLiked);});
-    card.querySelector('.btn-repost')?.addEventListener('click',()=>{const isReposted=card.querySelector('.btn-repost').classList.toggle('reposted');localStorage.setItem(`koneat_repost_${videoId}`,isReposted);});
-    card.querySelector('.btn-save')?.addEventListener('click',()=>{const isSaved=card.querySelector('.btn-save').classList.toggle('saved');localStorage.setItem(`koneat_save_${videoId}`,isSaved);});
-  });
+  const req=indexedDB.open('KoneatDB',1);
+  req.onupgradeneeded=(e)=>{ if(!e.target.result.objectStoreNames.contains('videos')) e.target.result.createObjectStore('videos',{keyPath:'id'}); };
+  req.onsuccess=(e)=>{
+    const db=e.target.result; if(!db.objectStoreNames.contains('videos')){ reelsContainer.innerHTML='<div class="empty-feed-wrapper">Nenhum vídeo</div>'; return; }
+    const tx=db.transaction('videos','readonly'); const all=tx.objectStore('videos').getAll();
+    all.onsuccess=()=>{
+      const viraisFeed = all.result.filter(v=>v.tipo==='viral').sort((a,b)=>b.created-a.created);
+      if(viraisFeed.length===0){
+        reelsContainer.innerHTML=`<div class="empty-feed-wrapper"><span>Os vídeos virais aparecerão aqui.</span><span style="font-size:13px;">Poste selecionando VIRAIS no topo</span><a href="./criar.html" style="background:#fff;color:#000;padding:10px 18px;border-radius:20px;text-decoration:none;font-weight:700;margin-top:10px;">Criar primeiro vídeo</a></div>`;
+        return;
+      }
+      reelsContainer.innerHTML=viraisFeed.map((item)=>{
+        const url=URL.createObjectURL(item.file);
+        return `<article class="reel-card" data-formato="${item.formato}">
+          <video class="reel-video-element" data-formato="${item.formato}" src="${url}" loop muted playsinline autoplay></video>
+          <div style="position:absolute;bottom:80px;left:16px;display:flex;flex-direction:column;gap:8px"><span style="font-weight:700">@koneat_user • ${item.formato} 🔥</span><span style="font-size:13px">${item.caption||''}</span></div>
+        </article>`;
+      }).join('');
+      const observer=new IntersectionObserver((entries)=>{ entries.forEach(en=>{ const v=en.target.querySelector('video'); if(en.isIntersecting){ v.play().catch(()=>{}); }else{ v.pause(); } }); },{threshold:0.7});
+      document.querySelectorAll('.reel-card').forEach(c=>observer.observe(c));
+    };
+  };
 }
 renderViraisFeed();
 </script>
