@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Koneat - Perfil</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
@@ -10,90 +9,37 @@
         .bottom-nav-fixed{position:fixed;bottom:0;left:0;right:0;width:100%;height:62px;background:#121214;border-top-left-radius:20px;border-top-right-radius:20px;display:flex;align-items:center;justify-content:space-around;z-index:999;box-sizing:border-box;padding:0 10px}
         .nav-link{background:none;border:none;cursor:pointer;color:#8e8e93;display:flex;align-items:center;justify-content:center;text-decoration:none;width:48px;height:48px}
         .profile-active-circle{width:32px;height:32px;border-radius:50%;border:2px solid #fff;display:flex;align-items:center;justify-content:center;box-sizing:border-box}
+        .profile-active-circle svg{stroke:#8e8e93}
         .posts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;padding:2px 0 80px 0;width:100%}
         .post-grid-item{position:relative;width:100%;aspect-ratio:1/1;background:#222;overflow:hidden;cursor:pointer}
-        .post-grid-item video{width:100%;height:100%;object-fit:cover;display:block}
+        .post-grid-item img,.post-grid-item video{width:100%;height:100%;object-fit:cover;display:block}
+        .post-grid-item .badge-video{position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.6);padding:3px;border-radius:4px;display:flex;z-index:2}
         .btn-delete-post{position:absolute;top:6px;left:6px;background:rgba(0,0,0,0.7);border:none;color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10}
         .badge-formato{position:absolute;bottom:4px;right:4px;background:rgba(0,0,0,0.6);color:#fff;font-size:9px;padding:2px 5px;border-radius:3px}
-        .badge-video{position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.6);padding:3px;border-radius:4px;display:flex}
+        #videoModal{position:fixed;top:0;left:0;right:0;bottom:0;background:#000;z-index:9999;display:none;align-items:center;justify-content:center;flex-direction:column}
     </style>
 </head>
 <body class="light-theme">
     <div class="app-container" style="padding-bottom:70px;">
-        <header class="profile-header"><div class="header-logo" style="font-size:20px;font-weight:700;">koneat_user</div></header>
-        <section class="profile-top-layout" style="display:flex;gap:20px;padding:16px"><div class="avatar-circle" style="width:80px;height:80px;border-radius:50%;background:#ddd"></div><div class="stats-bar-inline" style="display:flex;gap:20px"><div><span class="stat-number" id="postsCount">0</span> posts</div></div></section>
-        <nav class="content-tabs" style="display:flex;gap:20px;padding:10px;border-top:1px solid #eee;border-bottom:1px solid #eee">
-            <button class="tab-btn active" data-tab="todos">Todos</button>
-            <button class="tab-btn" data-tab="virais">Virais 🔥</button>
-            <button class="tab-btn" data-tab="geral">Geral</button>
-        </nav>
-        <section class="feed-empty-state" id="emptyState" style="padding:40px;text-align:center"><h2>Capture o momento</h2><a href="./criar.html">Crie seu primeiro post</a></section>
+        <header class="profile-header"><div class="header-logo" id="headerUsername" style="text-transform:lowercase;font-size:20px;font-weight:700;">koneat_user</div><div class="header-actions"><button class="icon-btn">✉</button><div class="dropdown-wrapper"><button class="icon-btn" id="menuBtn">⋮</button><div class="dropdown-menu" id="dropdownMenu"><a href="./configuracoes.html" class="dropdown-item">Configurações</a><a href="./privacidade.html" class="dropdown-item">Privacidade</a><a href="./termos.html" class="dropdown-item">Termos</a></div></div></div></header>
+        <section class="profile-top-layout"><div class="avatar-container"><div class="avatar-circle" style="width:80px;height:80px;border-radius:50%;background:#ddd;display:flex;align-items:center;justify-content:center">◉</div></div><div class="stats-bar-inline"><div class="stat-item"><span class="stat-number" id="postsCount">0</span> posts</div><div class="stat-item"><span class="stat-number">0</span> seguidores</div><div class="stat-item"><span class="stat-number">0</span> seguindo</div></div></section>
+        <section class="user-details-block"><h1 class="user-name" id="profileName">Koneat User</h1><p class="user-tag" id="profileTag">@koneat_user</p><p class="user-bio" id="profileBio"></p></section>
+        <section class="action-buttons"><a href="./editar-perfil.html" class="btn-secondary">Editar perfil</a><button class="btn-secondary">Compartilhar perfil</button></section>
+        <nav class="content-tabs"><button class="tab-btn active" data-tab="todos">Todos</button><button class="tab-btn" data-tab="virais">Virais 🔥</button><button class="tab-btn" data-tab="geral">Geral</button></nav>
+        <section class="feed-empty-state" id="emptyState"><h2>Capture o momento com um amigo</h2><a href="./criar.html" class="btn-create-post">Crie seu primeiro post</a></section>
         <div class="posts-grid" id="userPostsGrid" style="display:none;"></div>
     </div>
-    <nav class="bottom-nav-fixed">
-        <a href="./home.html" class="nav-link">⌂</a><a href="./criar.html" class="nav-link">+</a><a href="./passo2.html" class="nav-link">▶</a><a href="./passo1.html" class="nav-link"><div class="profile-active-circle">◉</div></a>
-    </nav>
+    <div id="videoModal"><button onclick="document.getElementById('videoModal').style.display='none';document.getElementById('modalVideo').pause()" style="position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.2);border:none;color:#fff;width:40px;height:40px;border-radius:50%">X</button><video id="modalVideo" controls autoplay playsinline style="width:100%;height:80vh;object-fit:contain"></video><p id="modalCaption" style="color:#fff;padding:16px"></p></div>
+    <nav class="bottom-nav-fixed"><a href="./home.html" class="nav-link">⌂</a><a href="./criar.html" class="nav-link">+</a><a href="./passo2.html" class="nav-link">▶</a><a href="./passo1.html" class="nav-link"><div class="profile-active-circle">◉</div></a></nav>
+    <script src="js/app.js"></script>
     <script>
-        let allVideosDB = [];
-        function carregarDoDB(callback){
-            const req=indexedDB.open('KoneatDB',1);
-            req.onupgradeneeded=(e)=>{ if(!e.target.result.objectStoreNames.contains('videos')) e.target.result.createObjectStore('videos',{keyPath:'id'}); };
-            req.onsuccess=(e)=>{
-                const db=e.target.result;
-                if(!db.objectStoreNames.contains('videos')){ callback([]); return; }
-                const tx=db.transaction('videos','readonly');
-                const getAll=tx.objectStore('videos').getAll();
-                getAll.onsuccess=()=>{
-                    const lista=getAll.result.map(v=>{
-                        return {id:v.id, src:URL.createObjectURL(v.file), tipo:v.tipo, formato:v.formato, caption:v.caption, created:v.created};
-                    }).sort((a,b)=>b.created-a.created);
-                    callback(lista);
-                };
-                getAll.onerror=()=>callback([]);
-            };
-            req.onerror=()=>callback([]);
-        }
-
-        function renderUserPosts(filter='todos'){
-            const postsGrid=document.getElementById('userPostsGrid');
-            const emptyState=document.getElementById('emptyState');
-            const postsCount=document.getElementById('postsCount');
-            let filtered=allVideosDB;
-            if(filter==='virais') filtered=allVideosDB.filter(p=>p.tipo==='viral');
-            if(filter==='geral') filtered=allVideosDB.filter(p=>p.tipo==='geral');
-            postsCount.textContent=allVideosDB.length;
-            if(filtered.length===0 && filter==='todos' && allVideosDB.length===0){
-                emptyState.style.display='block'; postsGrid.style.display='none';
-            }else{
-                emptyState.style.display='none'; postsGrid.style.display='grid';
-                postsGrid.innerHTML=filtered.map(post=>`
-                    <div class="post-grid-item" data-id="${post.id}">
-                        <button class="btn-delete-post" onclick="deletePost('${post.id}')">X</button>
-                        <video src="${post.src}" muted playsinline loop autoplay></video>
-                        <div class="badge-video">▶</div>
-                        <div class="badge-formato">${post.formato} ${post.tipo==='viral'?'🔥':''}</div>
-                    </div>`).join('');
-            }
-        }
-
-        function deletePost(postId){
-            if(!confirm('Excluir?')) return;
-            const req=indexedDB.open('KoneatDB',1);
-            req.onsuccess=(e)=>{
-                const db=e.target.result; const tx=db.transaction('videos','readwrite');
-                tx.objectStore('videos').delete(postId);
-                tx.oncomplete=()=>{ carregarDoDB((v)=>{ allVideosDB=v; renderUserPosts(document.querySelector('.tab-btn.active')?.dataset.tab||'todos'); }); };
-            };
-        }
-
-        document.querySelectorAll('.tab-btn').forEach(btn=>{
-            btn.addEventListener('click',()=>{
-                document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-                btn.classList.add('active'); renderUserPosts(btn.dataset.tab);
-            });
-        });
-
-        carregarDoDB((videos)=>{ allVideosDB=videos; renderUserPosts('todos'); });
+        let allVideosCache=[];
+        function carregarDoDB(cb){ const req=indexedDB.open('KoneatDB',1); req.onupgradeneeded=(e)=>{ if(!e.target.result.objectStoreNames.contains('videos')) e.target.result.createObjectStore('videos',{keyPath:'id'}); }; req.onsuccess=(e)=>{ const db=e.target.result; if(!db.objectStoreNames.contains('videos')){ cb([]); return; } const tx=db.transaction('videos','readonly'); const getAll=tx.objectStore('videos').getAll(); getAll.onsuccess=()=>{ const lista=getAll.result.map(v=>{ try{ return {id:v.id, src:URL.createObjectURL(v.file), tipo:v.tipo||'geral', formato:v.formato||'9:16', caption:v.caption||'', created:v.created||0}; }catch{ return null; } }).filter(Boolean).sort((a,b)=>b.created-a.created); cb(lista); }; }; }
+        function openVideo(id){ const post=allVideosCache.find(p=>p.id===id); if(!post) return; document.getElementById('modalVideo').src=post.src; document.getElementById('modalCaption').innerText=post.caption+' • '+post.formato; document.getElementById('videoModal').style.display='flex'; }
+        function renderUserPosts(filter='todos'){ const postsGrid=document.getElementById('userPostsGrid'); const emptyState=document.getElementById('emptyState'); const postsCount=document.getElementById('postsCount'); let filtered=allVideosCache; if(filter==='virais') filtered=allVideosCache.filter(p=>p.tipo==='viral'); if(filter==='geral') filtered=allVideosCache.filter(p=>p.tipo==='geral'); if(postsCount) postsCount.textContent=allVideosCache.length; if(filtered.length===0 && allVideosCache.length===0){ emptyState.style.display='flex'; postsGrid.style.display='none'; }else{ emptyState.style.display='none'; postsGrid.style.display='grid'; postsGrid.innerHTML=filtered.map(post=>`<div class="post-grid-item" onclick="openVideo('${post.id}')"><button class="btn-delete-post" onclick="event.stopPropagation(); deletePost('${post.id}')">X</button><video src="${post.src}" muted playsinline></video><div class="badge-formato">${post.formato} ${post.tipo==='viral'?'🔥':''}</div></div>`).join(''); } }
+        function deletePost(id){ if(!confirm('Excluir?')) return; const req=indexedDB.open('KoneatDB',1); req.onsuccess=(e)=>{ const db=e.target.result; const tx=db.transaction('videos','readwrite'); tx.objectStore('videos').delete(id); tx.oncomplete=()=>carregarDoDB(v=>{ allVideosCache=v; renderUserPosts(document.querySelector('.tab-btn.active')?.dataset.tab||'todos'); }); }; }
+        document.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click',()=>{ document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); renderUserPosts(btn.dataset.tab); }));
+        carregarDoDB(v=>{ allVideosCache=v; renderUserPosts('todos'); });
     </script>
 </body>
-    </html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         </html>
